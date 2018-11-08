@@ -6,7 +6,7 @@ public class WordSearch{
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-    public WordSearch(int rows,int cols){
+    public WordSearch(int rows, int cols){
       data = new char[rows][cols];
       clear();
     }
@@ -14,7 +14,7 @@ public class WordSearch{
     /**Set all values in the WordSearch to underscores'_'*/
     private void clear(){
       for (int x = 0; x < data.length; x++) {
-        for (int y = 0; y < data.length; y++) {
+        for (int y = 0; y < data[0].length; y++) {
           data[x][y] = '_';
         }
       }
@@ -27,8 +27,8 @@ public class WordSearch{
     public String toString(){
       String out = "";
       for (int x = 0; x < data.length; x++) {
-        for (int y = 0; y < data.length; y++) {
-          out += data[x][y];
+        for (int y = 0; y < data[0].length; y++) {
+          out += data[x][y] + " ";
         }
         out += "\n";
       }
@@ -48,12 +48,12 @@ public class WordSearch{
      * and the board is NOT modified.
      */
     public boolean addWordHorizontal(String word,int row, int col){
-      if (data[row].length + 2 < col + word.length()) return false;
-      for (int i = col; i < word.length(); i++) {
-        if (data[row][i] == '_') data[row][i] = word.charAt(i);
-        else {
-          if (data[row][i] != word.charAt(i)) return false;
-        }
+      if (data[row].length < col + word.length()) return false;
+      for (int i = 0; i < word.length(); i++) {
+        if (data[row][i] != word.charAt(i) && data[row][col + i] != '_') return false;
+      }
+      for (int i = 0; i < word.length(); i++) {
+        data[row][col +i] = word.charAt(i);
       }
       return true;
     }
@@ -70,12 +70,12 @@ public class WordSearch{
      *and the board is NOT modified.
      */
     public boolean addWordVertical(String word,int row, int col){
-      if (data.length + 2 < row + word.length()) return false;
-      for (int i = row; i < word.length(); i++) {
-        if (data[i][col] == '_') data[i][col] = word.charAt(i);
-        else {
-          if (data[i][col] != word.charAt(i)) return false;
-        }
+      if (data.length < row + word.length()) return false;
+      for (int i = 0; i < word.length(); i++) {
+        if (data[row + i][col] != word.charAt(i) && data[row + i][col] != '_') return false;
+      }
+      for (int i = 0; i < word.length(); i++) {
+        data[row + i][col] = word.charAt(i);
       }
       return true;
     }
