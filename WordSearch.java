@@ -17,9 +17,36 @@ public class WordSearch{
      *@param row is the starting height of the WordSearch
      *@param col is the starting width of the WordSearch
      */
-    public WordSearch(int rows, int cols){
+
+
+    public WordSearch( int rows, int cols, String fileName) {
       data = new char[rows][cols];
+      wordsToAdd = new ArrayList<String>();
+      wordsAdded = new ArrayList<String>();
       clear();
+      readFile(fileName);
+    }
+    public WordSearch( int rows, int cols, String fileName, int randSeed) {
+      data = new char[rows][cols];
+      wordsToAdd = new ArrayList<String>();
+      wordsAdded = new ArrayList<String>();
+      clear();
+      readFile(fileName);
+    }
+
+    private void readFile(String fileName) {
+      File filein = new File(fileName);
+      try {
+       Scanner scn = new Scanner(filein);
+       while(scn.hasNext()){
+        String line = scn.nextLine();
+        wordsToAdd.add(line);
+      }
+       scn.close();
+     }
+     catch (FileNotFoundException e) {
+       System.out.println("not a valid file");
+     }
     }
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -31,6 +58,7 @@ public class WordSearch{
       }
     }
 
+
     /**Each row is a new line, there is a space between each letter
      *@return a String with each character separated by spaces, and rows
      *separated by newlines.
@@ -38,10 +66,16 @@ public class WordSearch{
     public String toString(){
       String out = "";
       for (int x = 0; x < data.length; x++) {
+        out += "|";
         for (int y = 0; y < data[0].length; y++) {
-          out += data[x][y] + " ";
+          out += data[x][y];
+          if (y < data[0].length - 1) out += " ";
         }
-        out += "\n";
+        out += "|\n";
+      }
+      out += "Words: ";
+      for (int i = 0; i < wordsAdded.size(); i++){
+        out += wordsAdded.get(i);
       }
     return out;
     }
