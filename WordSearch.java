@@ -1,5 +1,6 @@
 import java.util.*; //random, scanner, arraylist
 import java.io.*; //file, filenotfoundexception
+import java.lang.Math;
 public class WordSearch{
     private char[][]data;
     //the random seed used to produce this WordSearch
@@ -19,17 +20,12 @@ public class WordSearch{
      */
 
 
-    public WordSearch( int rows, int cols, String fileName) {
+    private WordSearch( int rows, int cols, String fileName, int randSeed, boolean ans) {
       data = new char[rows][cols];
       wordsToAdd = new ArrayList<String>();
       wordsAdded = new ArrayList<String>();
-      clear();
-      readFile(fileName);
-    }
-    public WordSearch( int rows, int cols, String fileName, int randSeed) {
-      data = new char[rows][cols];
-      wordsToAdd = new ArrayList<String>();
-      wordsAdded = new ArrayList<String>();
+      seed = randSeed;
+      randgen = new Random(seed);
       clear();
       readFile(fileName);
     }
@@ -81,7 +77,7 @@ public class WordSearch{
     }
 
 
-    public boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
+    private boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
       if (row + rowIncrement * word.length() > data.length || col + colIncrement * word.length() > data[row].length) return false;
      for (int i = 0; i < word.length(); i++) {
        if (data[row + rowIncrement * i][col + colIncrement * i] != word.charAt(i) && data[row + rowIncrement * i][col + colIncrement * i] != '_') return false;
@@ -91,7 +87,6 @@ public class WordSearch{
        }
       return true;
     }
-
     /*[rowIncrement,colIncrement] examples:
 
      *[-1,1] would add up and the right because (row -1 each time, col + 1 each time)
@@ -101,5 +96,31 @@ public class WordSearch{
      *[ 0,-1] would add towards the left because (col - 1), with no row change
 
      */
+
+    public static void main(String[]args){
+      if (args.length < 3) {
+        System.out.println("Syntax: row col filename");
+      }
+      if (args.length == 3) {
+        int randSeed = (int)Math.random()*10000;
+        new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], randSeed, true);
+      }
+      if (args.length == 4) {
+        new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), true);
+      }
+    }
+
+    private void addAllWords(){
+      while (wordsToAdd.size() > 0) {
+        int i = 10000;
+        while (i > 0){
+          String targetWord = wordsToAdd.get(randgen.nextInt()%wordsToAdd.size());
+          int rowInc = randgen.nextInt()%2;
+          int colInc = randgen.nextInt()%2;
+        }
+
+      }
+    }
+
 
 }
