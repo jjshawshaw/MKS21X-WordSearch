@@ -28,6 +28,7 @@ public class WordSearch{
       randgen = new Random(seed);
       clear();
       readFile(fileName);
+      addAllWords();
     }
 
     private void readFile(String fileName) {
@@ -35,7 +36,7 @@ public class WordSearch{
       try {
        Scanner scn = new Scanner(filein);
        while(scn.hasNext()){
-        String line = scn.nextLine();
+        String line = scn.next();
         wordsToAdd.add(line);
       }
        scn.close();
@@ -79,12 +80,16 @@ public class WordSearch{
 
     private boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement){
       if (row + rowIncrement * word.length() > data.length || col + colIncrement * word.length() > data[row].length) return false;
+      if (row + rowIncrement * word.length() < 0 || col + colIncrement * word.length() < 0) return false;
+      if (rowIncrement == 0 && colIncrement == 0) return false;
      for (int i = 0; i < word.length(); i++) {
        if (data[row + rowIncrement * i][col + colIncrement * i] != word.charAt(i) && data[row + rowIncrement * i][col + colIncrement * i] != '_') return false;
       }
       for (int i = 0; i < word.length(); i++) {
         data[row + rowIncrement * i][col + colIncrement * i] = word.charAt(i);
        }
+       wordsToAdd.remove(word);
+       wordsAdded.add(word);
       return true;
     }
     /*[rowIncrement,colIncrement] examples:
@@ -111,15 +116,22 @@ public class WordSearch{
     }
 
     private void addAllWords(){
-      while (wordsToAdd.size() > 0) {
-        int i = 10000;
-        while (i > 0){
-          String targetWord = wordsToAdd.get(randgen.nextInt()%wordsToAdd.size());
-          int rowInc = randgen.nextInt()%2;
-          int colInc = randgen.nextInt()%2;
-        }
-
+      int i = 10000;
+      while (i > 0 && wordsToAdd.size() > 0){
+        String targetWord = wordsToAdd.get(Math.abs(randgen.nextInt()%wordsToAdd.size()));
+        int rowInc = randgen.nextInt()%2;
+        int colInc = randgen.nextInt()%2;
+        int row = Math.abs(randgen.nextInt()%data.length);
+        int col = Math.abs(randgen.nextInt()%data[row].length);
+        System.out.println("" + targetWord);
+        if (!addWord(targetWord, row, col, rowInc, colInc)) i--;
+        else i = 10000;
       }
+      System.out.println(this);
+    }
+
+    private void fillBlanks(){
+
     }
 
 
