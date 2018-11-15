@@ -50,7 +50,7 @@ public class WordSearch{
     private void clear(){
       for (int x = 0; x < data.length; x++) {
         for (int y = 0; y < data[0].length; y++) {
-          data[x][y] = '_';
+          data[x][y] = ' ';
         }
       }
     }
@@ -83,7 +83,7 @@ public class WordSearch{
       if (row + rowIncrement * word.length() < 0 || col + colIncrement * word.length() < 0) return false;
       if (rowIncrement == 0 && colIncrement == 0) return false;
      for (int i = 0; i < word.length(); i++) {
-       if (data[row + rowIncrement * i][col + colIncrement * i] != word.charAt(i) && data[row + rowIncrement * i][col + colIncrement * i] != '_') return false;
+       if (data[row + rowIncrement * i][col + colIncrement * i] != word.charAt(i) && data[row + rowIncrement * i][col + colIncrement * i] != ' ') return false;
       }
       for (int i = 0; i < word.length(); i++) {
         data[row + rowIncrement * i][col + colIncrement * i] = word.charAt(i);
@@ -107,7 +107,7 @@ public class WordSearch{
         System.out.println("Syntax: row col filename");
       }
       if (args.length == 3) {
-        int randSeed = (int)Math.random()*10000;
+        int randSeed = (int)(Math.random()*10000);
         new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], randSeed, true);
       }
       if (args.length == 4) {
@@ -123,10 +123,10 @@ public class WordSearch{
         int colInc = randgen.nextInt()%2;
         int row = Math.abs(randgen.nextInt()%data.length);
         int col = Math.abs(randgen.nextInt()%data[row].length);
-        System.out.println("" + targetWord);
         if (!addWord(targetWord, row, col, rowInc, colInc)) i--;
         else i = 10000;
       }
+      System.out.println(seed);
       System.out.println(this);
     }
 
