@@ -26,24 +26,26 @@ public class WordSearch{
       wordsAdded = new ArrayList<String>();
       seed = randSeed;
       randgen = new Random(seed);
-      clear();
-      readFile(fileName);
-      addAllWords();
+      try {
+        clear();
+        readFile(fileName);
+        addAllWords();
+        if (!ans) fillBlanks();
+        System.out.println(this);
+      }
+      catch (FileNotFoundException e) {
+        System.out.println("not a valid file");
+      }
     }
 
-    private void readFile(String fileName) {
+    private void readFile(String fileName) throws FileNotFoundException {
       File filein = new File(fileName);
-      try {
-       Scanner scn = new Scanner(filein);
-       while(scn.hasNext()){
-        String line = scn.next();
-        wordsToAdd.add(line);
+      Scanner scn = new Scanner(filein);
+      while(scn.hasNext()){
+      String line = scn.next();
+      wordsToAdd.add(line);
       }
-       scn.close();
-     }
-     catch (FileNotFoundException e) {
-       System.out.println("not a valid file");
-     }
+      scn.close();
     }
 
     /**Set all values in the WordSearch to underscores'_'*/
@@ -72,9 +74,10 @@ public class WordSearch{
       }
       out += "Words: ";
       for (int i = 0; i < wordsAdded.size(); i++){
-        out += wordsAdded.get(i);
+        out += wordsAdded.get(i) + " ";
       }
-    return out;
+      out += "\nSeed: " + seed;
+      return out;
     }
 
 
@@ -102,37 +105,46 @@ public class WordSearch{
 
      */
 
+     private void addAllWords(){
+       int i = 10000;
+       while (i > 0 && wordsToAdd.size() > 0){
+         String targetWord = wordsToAdd.get(Math.abs(randgen.nextInt()%wordsToAdd.size()));
+         int rowInc = randgen.nextInt()%2;
+         int colInc = randgen.nextInt()%2;
+         int row = Math.abs(randgen.nextInt()%data.length);
+         int col = Math.abs(randgen.nextInt()%data[row].length);
+         if (!addWord(targetWord, row, col, rowInc, colInc)) i--;
+         else i = 10000;
+       }
+     }
+
+     private void fillBlanks(){
+       for (int x = 0; x < data.length; x++) {
+         for (int y = 0; y < data[0].length; y++) {
+           if (data[x][y] == ' ') data[x][y] = (char)('A' + Math.abs(randgen.nextInt()%26));
+         }
+       }
+     }
+
     public static void main(String[]args){
       if (args.length < 3) {
-        System.out.println("Syntax: row col filename");
+        System.out.println("Syntax: [rows cols filename [randomSeed [answers]]]");
       }
-      if (args.length == 3) {
-        int randSeed = (int)(Math.random()*10000);
-        new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], randSeed, true);
+      try {
+        if (args.length == 3) {
+          int randSeed = (int)(Math.random()*10000);
+          new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], randSeed, false);
+        }
+        if (args.length == 4) {
+          new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), false);
+        }
+        if (args.length == 5) {
+          new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), (args[4].equals("key")));
+        }
+      } catch (java.lang.NumberFormatException e) {
+        System.out.println("Syntax: [rows cols filename [randomSeed [answers]]]");
       }
-      if (args.length == 4) {
-        new WordSearch(Integer.parseInt(args[0]), Integer.parseInt(args[1]), args[2], Integer.parseInt(args[3]), true);
-      }
-    }
-
-    private void addAllWords(){
-      int i = 10000;
-      while (i > 0 && wordsToAdd.size() > 0){
-        String targetWord = wordsToAdd.get(Math.abs(randgen.nextInt()%wordsToAdd.size()));
-        int rowInc = randgen.nextInt()%2;
-        int colInc = randgen.nextInt()%2;
-        int row = Math.abs(randgen.nextInt()%data.length);
-        int col = Math.abs(randgen.nextInt()%data[row].length);
-        if (!addWord(targetWord, row, col, rowInc, colInc)) i--;
-        else i = 10000;
-      }
-      System.out.println(seed);
-      System.out.println(this);
-    }
-
-    private void fillBlanks(){
 
     }
-
 
 }
